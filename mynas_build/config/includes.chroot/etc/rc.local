@@ -1,4 +1,5 @@
 #!/bin/bash
 cd /app && /app/mynas &
+cd /app/scripts && ./auto_start.sh
 echo "init done"
 exit 0
