@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+# Enable rc-local service
+systemctl enable rc-local
+
+# Start rc-local service
+#systemctl start rc-local
+
+echo "end-----------rc-local"

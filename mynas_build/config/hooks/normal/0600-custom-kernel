@@ -1,0 +1,15 @@
+#!/bin/sh
+set -e
+echo "HOOK: building custom kernel"
+
+cd $LB_SOURCE_DIR/kernel/bcachefs
+cp -rf $LB_SOURCE_DIR/kernel/config .config
+# Build and install the kernel
+make menuconfig
+make
+make INSTALL_MOD_STRIP=1 modules_install firmware_install
+make install
+#cp arch/x86/boot/bzImage /boot/vmlinuz-5.15.4
+#cp System.map /boot/System.map-5.15.4
+#update-initramfs -c -k 5.15.4
+#update-grub

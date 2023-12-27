@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+systemctl disable libvirtd.service
+systemctl disable docker.service
+systemctl disable docker.socket
+systemctl disable smbd.service
+#systemctl mask libvirtd.service
+echo "end-----------"

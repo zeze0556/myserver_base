@@ -1,0 +1,4 @@
+#!/bin/bash
+cd /app && /app/mynas &
+echo "init done"
+exit 0

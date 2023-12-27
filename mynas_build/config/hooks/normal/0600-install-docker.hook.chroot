@@ -1,0 +1,53 @@
+#!/bin/sh
+set -ex
+apt-get install -y ca-certificates
+max_retries=5
+retry_count=0
+url="https://get.docker.com"
+output_file="get-docker.sh"
+
+# 定义一个函数，用于下载并检查返回码
+download_with_retry() {
+    curl -fsSL "$url" -o "$output_file"
+    return $?
+}
+
+while [ $retry_count -lt $max_retries ]; do
+    # 使用 curl 进行请求
+    download_with_retry
+
+    # 检查 curl 的返回码
+    if [ $? -eq 0 ]; then
+        echo "Request successful"
+        break  # 请求成功，退出循环
+    else
+        echo "Request failed. Retrying..."
+        ((retry_count++))
+        sleep 5  # 间隔5秒后重试
+    fi
+done
+
+if [ $retry_count -eq $max_retries ]; then
+    echo "Maximum retries reached. Request failed."
+    exit 1  # 如果达到最大重试次数，返回失败
+fi
+
+sh get-docker.sh --mirror Aliyun
+#AzureChinaCloud
+rm -rf get-docker.sh
+
+#apt-get install -y ca-certificates curl gnupg
+#install -m 0755 -d /etc/apt/keyrings
+#curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+#chmod a+r /etc/apt/keyrings/docker.gpg
+#echo \
+#    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+#  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+#    tee /etc/apt/sources.list.d/docker.list > /dev/null
+#apt-get update -y
+#apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+##
+#systemctl disable docker.service
+#systemctl disable docker.socket
+
+echo "end-----------"

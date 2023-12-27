@@ -1,0 +1,23 @@
+version: "3"
+services:
+  bcachefs:
+    #image: ubuntu:22.04
+    build:
+      context: .
+      dockerfile: bcachefs.dockerfile
+    #restart: always
+    environment:
+    - DISPLAY=$DISPLAY
+    - LANG=zh-CN.UTF-8
+    network_mode: "host"
+    container_name: bcachefs
+    entrypoint: /root/entry.sh
+    working_dir: "/root"
+    privileged: true
+    command: "bash"
+    #ports:
+    #- "9022:22"
+    volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix
+    - ./root:/root:z
+    - ../../mynas_build:/data:z
