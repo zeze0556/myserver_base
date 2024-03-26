@@ -21,10 +21,12 @@ function init_source() {
 }
 
 function build_kernel() {
+    cd $bcachefs_dir
     make -j 4 deb-pkg LOCALVERSION=-rix
 }
 
 function build_tools() {
+    cd $bcachefs_tools
     make deb
 }
 

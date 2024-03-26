@@ -17,7 +17,7 @@ function install() {
             python3 \
             mkisofs \
             libfuse3-dev \
-            libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm
+            libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm debhelper-compat dh-python python3-docutils systemd rustc
             echo "over install"
 }
 

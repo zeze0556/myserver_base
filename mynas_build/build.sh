@@ -4,7 +4,7 @@ lb clean
 MIRROR=http://deb.debian.org/debian/
 CODENAME=bookworm
 BOOT="boot=live components persistence persistence-encryption=luks persistence-label=mynas quiet splash"
-lb config --linux-packages linux-image-6.7.0-rc5 --linux-flavour rix \
+lb config --linux-packages linux-image-6.8.0-rc6 --linux-flavour rix \
    -d $CODENAME \
    --apt-options "--yes"\
    --distribution-chroot $CODENAME \
