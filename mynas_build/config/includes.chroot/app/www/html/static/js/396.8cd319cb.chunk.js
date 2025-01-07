@@ -1,0 +1,1 @@
+(self.webpackChunkmypxe_admin=self.webpackChunkmypxe_admin||[]).push([[396],{28797:function(e,n,t){"use strict";t.r(n);var a=t(42272),c=t(44843),r=t(46417);test("renders learn react link",(function(){(0,a.sY)((0,r.jsx)(c.default,{}));var e=a.sp.getByText(/learn react/i);expect(e).toBeInTheDocument()}))},24654:function(){}}]);

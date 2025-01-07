@@ -1,2 +1,0 @@
-(self.webpackChunkmypxe_admin=self.webpackChunkmypxe_admin||[]).push([[449],{52737:function(e,n,t){"use strict";t.r(n);var a=t(99607),c=t(9555),r=t(80184);test("renders learn react link",(function(){(0,a.sY)((0,r.jsx)(c.default,{}));var e=a.sp.getByText(/learn react/i);expect(e).toBeInTheDocument()}))},24654:function(){}}]);
-//# sourceMappingURL=449.9dedd177.chunk.js.map

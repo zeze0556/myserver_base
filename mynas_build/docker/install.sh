@@ -13,11 +13,14 @@ function install() {
             uuid-dev zlib1g-dev valgrind libudev-dev git build-essential rust-all \
             debhelper \
             devscripts \
-            python3-docsutils \
             python3 \
             mkisofs \
             libfuse3-dev \
-            libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm debhelper-compat dh-python python3-docutils systemd rustc
+            libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm debhelper-compat dh-python systemd rustc curl libscrypt-dev libsystemd-dev \
+            live-build \
+            libdw-dev  libunwind-dev  libslang2-dev libperl-dev systemtap-sdt-dev \
+            python3-dev libpfm4-dev libtraceevent-dev
+
             echo "over install"
 }
 

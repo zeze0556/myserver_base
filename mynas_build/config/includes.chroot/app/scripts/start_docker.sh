@@ -3,6 +3,7 @@ set -ex
 docker_config=$(cat /app/config/docker.config)
 save_config=$(echo "$docker_config" | jq -r '.save_config')
 save_type=$(echo "$save_config" | jq -r '.type')
+bip=$(echo "$docker_config" | jq -r '.bip')
 # 构建镜像源配置
 mirror_config=$(echo "$config" | jq -c '.mirror')
 registry_mirrors="[]"
@@ -41,7 +42,7 @@ process_label() {
 
 function check_mount_status()
 {
-    status=$(bcachefs fs usage $1 | grep "Filesystem:")
+    status=$(mount | grep "$1")
     echo $status
 }
 
@@ -52,16 +53,24 @@ function mount_pool()
     config=$(cat /app/config/pools.config)
     auto_mount_true_items=$(echo "$config" | jq -c '.[] | select(.name== "'$pool_name'")')
     echo "$auto_mount_true_items" | while read -r item; do
+        name=$(echo "$item" | jq -r '.name')
         mount_path=$(echo "$item" | jq -r '.mount_path')
-        labels=$(echo "$item" | jq -c '.label[]')
-
+        type=$(echo "$pool" | jq -r '.type')
+        uuid=$(echo "$pool" | jq -r '.uuid')
         # 调用函数处理label数组，并获取结果
         status=$(check_mount_status $mount_path)
         case "$status" in
             "")
-                devices_str=$(process_label "$labels")
-                # 挂载bcachefs文件系统
-                mount -t bcachefs "$devices_str" "$mount_path"
+                mkdir -p $mount_path
+                if [ "$type" = "bcachefs" ]; then
+                    #echo "Mounting Bcachefs filesystem $name with UUID=$uuid at $mount_path"
+                    #echo bcachefs mount -o "$mount_option" UUID="$uuid" "$mount_path"
+                    bcachefs mount UUID="$uuid" "$mount_path"
+                else
+                    #echo "Mounting Btrfs filesystem $name with UUID=$uuid at $mount_path"
+                    #mount -o "$mount_option" UUID="$uuid" "$mount_path"
+                    mount UUID="$uuid" "$mount_path"
+                fi
                 echo $mount_path
                 ;;
             *)
@@ -84,6 +93,7 @@ function set_up_docker_img()
         *)
             freeloop=$(losetup -f)
             losetup $freeloop "$mount_path/$img_path"
+            mkdir -p /var/lib/docker
             mount $freeloop /var/lib/docker
             echo "/var/lib/docker"
             ;;
@@ -100,7 +110,8 @@ case "$save_type" in
                 docker_path=$(set_up_docker_img $mount_path $(echo "$pool_config" | jq -r ".config.path"))
                 ;;
             "pool_path")
-                docker_path=$(echo "$save_config" | jq -r '.config.path')
+                docker_path=$(echo "$save_config" | jq -r '.save.path')
+                mkdir -p $docker_path
                 ;;
         esac
     ;;
@@ -113,7 +124,7 @@ output=$(cat <<EOF
 {
     "data-root": "$docker_path",
     "log-driver": "none",
-    "bip": "172.10.0.1/24",
+    "bip": "$bip",
     "registry-mirrors": [$registry_mirrors]
 }
 EOF
@@ -121,3 +132,4 @@ EOF
 echo $output > /etc/docker/daemon.json
 
 systemctl restart docker.service
+

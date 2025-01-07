@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkmypxe_admin=self.webpackChunkmypxe_admin||[]).push([[561],{1561:function(e,s,p){e.exports=p.p+"static/media/desktop.css.f1fb5ec473db100800e1.bak"}}]);

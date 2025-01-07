@@ -14,6 +14,11 @@ for interface in $all_interfaces; do
 
     # 检查是否存在PCI信息
     if [ -d "$device_path" ]; then
+        if [ -d "/sys/class/net/$interface/master" ]; then
+            #说明绑着br设备
+            interface=$(basename $(readlink "/sys/class/net/$interface/master"))
+            device_path="/sys/class/net/$interface/device"
+        fi
         pci_address=$(readlink "$device_path" | awk -F "/" '{print $4}')
         mac_address=$(cat "/sys/class/net/$interface/address")
 
@@ -24,10 +29,12 @@ for interface in $all_interfaces; do
         ipv6_addresses=($(ip -o -6 addr show dev "$interface" | awk '{print $4}' | cut -d'/' -f1))
 
         # 将信息添加到数组
-        output_array+=("{\"interface\":\"$interface\",\"mac\":\"$mac_address\",\"pci_address\":\"$pci_address\",\"ipv4\":$(printf '%s\n' "${ipv4_addresses[@]}" | jq -R . -c -s),\"ipv6\":$(printf '%s\n' "${ipv6_addresses[@]}" | jq -R . -c -s)}")
+        str=("{\"interface\":\"$interface\",\"mac\":\"$mac_address\",\"pci_address\":\"$pci_address\",\"ipv4\":$(printf '%s' "${ipv4_addresses[@]}" | jq -R . -c -s),\"ipv6\":$(printf '%s\n' "${ipv6_addresses[@]}" | jq -R . -c -s)}")
+        echo $str
+        #output_array+=("{\"interface\":\"$interface\",\"mac\":\"$mac_address\",\"pci_address\":\"$pci_address\",\"ipv4\":$(printf '%s' "${ipv4_addresses[@]}" | jq -R . -c -s),\"ipv6\":$(printf '%s' "${ipv6_addresses[@]}" | jq -R . -c -s)}")
     fi
 done
 
 # 将数组转换为JSON格式输出
-json_output="[${output_array[*]}]"
-echo "$json_output"
+#json_output="[${output_array[*]}]"
+#echo "$json_output"

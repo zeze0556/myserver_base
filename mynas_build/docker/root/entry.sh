@@ -1,3 +1,3 @@
 #!/bin/bash
-
-bash
+source /root/.bashrc
+tail -f /dev/null

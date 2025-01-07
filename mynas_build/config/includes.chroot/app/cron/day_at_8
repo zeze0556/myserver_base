@@ -1,0 +1,4 @@
+#!/bin/bash
+
+/app/scripts/hd_tools.sh true
+echo "ok"

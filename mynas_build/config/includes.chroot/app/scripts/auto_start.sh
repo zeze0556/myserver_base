@@ -17,5 +17,8 @@ function auto_start_docker()
 
 auto_start_docker
 
+websockify -D --web=/usr/share/novnc/ --token-plugin TokenFile --token-source /app/token/ 6080
+
 echo "done"
+
 exit 0

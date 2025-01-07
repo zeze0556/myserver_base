@@ -1,0 +1,1 @@
+0 8 * * * 	 bash /app/cron/day_at_8
