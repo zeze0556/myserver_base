@@ -22,7 +22,7 @@ LB_KEYRING_PACKAGES="debian-archive-keyring"
 LB_LINUX_FLAVOURS_WITH_ARCH="rix"
 
 # Set kernel packages to use
-LB_LINUX_PACKAGES="linux-image-6.12.0"
+LB_LINUX_PACKAGES="linux-image-6.15.0-rc6"
 
 # Enable security updates
 LB_SECURITY="true"

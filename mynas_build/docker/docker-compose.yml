@@ -9,12 +9,13 @@ services:
     environment:
     - DISPLAY=$DISPLAY
     - LANG=C
+    - CRON=true
     network_mode: "host"
     container_name: bcachefs
     entrypoint: /root/entry.sh
-    working_dir: "/root"
+    working_dir: "/data"
     privileged: true
-    command: "bash"
+    #command: "bash"
     #ports:
     #- "9022:22"
     volumes:

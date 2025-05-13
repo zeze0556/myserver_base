@@ -13,7 +13,7 @@ cd mynas_build/kernel
 iso构建:
 ```bash
 cd mynas_build
-build.sh #构建iso
+make #构建iso
 ```
 
 live iso并不保存数据，可以通过ventoy挂载启动，如果要保存数据可以通过persistence持久化的方式

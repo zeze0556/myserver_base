@@ -1,5 +1,6 @@
 user-setup
 sudo
+rsyslog
 cron
 ifupdown
 isc-dhcp-client
@@ -26,6 +27,7 @@ net-tools
 iputils-ping
 iputils-tracepath
 ntpdate
+ntp
 bridge-utils
 pciutils
 rsync
@@ -41,3 +43,4 @@ xorg
 websockify
 novnc
 lsb-release
+libxml2-utils
