@@ -1,5 +1,6 @@
 #!/bin/bash
 # 设置你要监控的 kernel 版本（例如：6.5-rc4）
+#set -x
 WATCH_VERSION=${1:-"6.15"}
 HOOK=${2:-"compile_kernel"}
 CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,12 +24,12 @@ function check_ver() {
         # 如果发现版本号比 WATCH_VERSION 新（字符串不相等），就输出信息
         if [[ "$VER" == "$WATCH_VERSION"* ]]; then
             if [[ "$VER" == "$old" ]]; then
-                echo "无更新，当前版本已是最新：$VER"
+                echo "无更新，当前版本已是最新：$VER" >> $CURDIR/../watch.log
             else
-                echo "✅ 新版本发布：$old --> $VER"
+                echo "✅ 新版本发布：$old --> $VER" >> $CURDIR/../watch.log
                 # 获取对应的 changelog URL
                 CHANGELOG=$(echo "$one" | xmllint --xpath '//table//tr[6]/td[1]/a/@href' - 2>/dev/null | sed -E 's/href="([^"]*)"/\1\n/g')
-                $HOOK $VER
+                $HOOK $VER > $CURDIR/../build_kernel.log
                 if [ $? -eq 0 ]; then
                     echo "$VER" > $CURDIR/../.kernel_version
                     build_iso
@@ -36,9 +37,9 @@ function check_ver() {
                     echo "last=="$?
                 fi
                 if [[ -n "$CHANGELOG_URL" ]]; then
-                    echo "🔗 changelog: $CHANGELOG_URL"
+                    echo "🔗 changelog: $CHANGELOG_URL" >> $CURDIR/../watch.log
                 else
-                    echo "ℹ️ 未找到 changelog 链接"
+                    echo "ℹ️ 未找到 changelog 链接" >> $CURDIR/../watch.log
                 fi
             fi
         fi
@@ -55,7 +56,7 @@ function compile_kernel() {
 
 function build_iso() {
     cd $CURDIR/../
-    make
+    make >> $(cat $CURDIR/../.kernel_version)_build_iso.log
 }
 
 check_ver
