@@ -1,5 +1,5 @@
 #!/bin/sh
-set -ex
+set -x
 apt-get install -y ca-certificates
 max_retries=5
 retry_count=0
@@ -22,7 +22,7 @@ while [ $retry_count -lt $max_retries ]; do
         break  # 请求成功，退出循环
     else
         echo "Request failed. Retrying..."
-        ((retry_count++))
+        retry_count=$((retry_count + 1))
         sleep 5  # 间隔5秒后重试
     fi
 done

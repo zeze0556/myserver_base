@@ -18,7 +18,6 @@ jq
 sysstat
 p7zip
 zstd
-#samba
 btrfs-progs
 libvirt-daemon-system
 ca-certificates
@@ -45,3 +44,8 @@ websockify
 novnc
 lsb-release
 libxml2-utils
+lvm2
+bcache-tools
+iotop
+xfsprogs
+lm-sensors

@@ -1,12 +1,12 @@
 #!/bin/bash
-#set -ex
+set -x
 cmd=${1:-"build"}
 CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
-KERNEL_VERSION="v6.15-rc3"
-TOOLS_VERSION="v1.25.2"
+KERNEL_VERSION="v6.16"
+TOOLS_VERSION="v1.25.3"
 LOCALVERSION="-rix"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
 KERNEL_SOURCE="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
@@ -108,6 +108,7 @@ function copy_deb() {
     cp -rf $libc ../config/packages.chroot/
     cp -rf bcachefs-tools_*_amd64.deb ../config/packages.chroot/
     cp -rf tools/liburcu-dev_0.15.0_amd64.deb ../config/packages.chroot/
+    cp -rf tools/liburcu8_0.15.0_amd64.deb ../config/packages.chroot/
 }
 
 shift
