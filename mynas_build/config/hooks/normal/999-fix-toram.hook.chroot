@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -x
+sed -i 's|dev="/dev/shm"|dev="tmpfs"|g' /usr/lib/live/boot/9990-toram-todisk.sh
+#sed -i 's/sometext/replacement/' /usr/lib/live/boot/9990-toram-todisk.sh
