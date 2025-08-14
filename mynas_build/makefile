@@ -1,6 +1,6 @@
 
 MIRROR=https://mirrors.ustc.edu.cn/debian/
-CODENAME=bookworm
+CODENAME=trixie
 #KERNEL_VER=$(cat $CURDIR/.kernel_version)
 BOOT="boot=live components persistence persistence-label=mynas quiet splash pci=noaer pcie_aspm=off"
 include ./kernel/bcachefs/debian/rules.vars
