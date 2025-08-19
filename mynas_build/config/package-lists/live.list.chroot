@@ -26,8 +26,8 @@ parted
 net-tools
 iputils-ping
 iputils-tracepath
-ntpdate
-ntp
+ntpsec-ntpdate
+ntpsec
 bridge-utils
 pciutils
 rsync
@@ -50,3 +50,4 @@ iotop
 xfsprogs
 lm-sensors
 thin-provisioning-tools
+#libaio1t64

@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:13
 
 MAINTAINER "--==RIX==--" <zeze0556.duckdns.org@gmail.com>
 
