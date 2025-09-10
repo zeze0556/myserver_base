@@ -24,7 +24,7 @@ function install() {
             libncurses-dev gawk flex bison openssl libssl-dev dkms libelf-dev libudev-dev libpci-dev libiberty-dev autoconf llvm debhelper-compat dh-python systemd rustc curl libscrypt-dev libsystemd-dev systemd-dev \
             live-build \
             libdw-dev  libunwind-dev  libslang2-dev libperl-dev systemtap-sdt-dev \
-            python3-dev libpfm4-dev libtraceevent-dev
+            python3-dev libpfm4-dev libtraceevent-dev liburcu-dev \
 
             echo "over install"
 }

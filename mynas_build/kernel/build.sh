@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 cmd=${1:-"build"}
 CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bcachefs_dir="./bcachefs"
@@ -11,6 +11,7 @@ LOCALVERSION="-rix"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
 KERNEL_SOURCE="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
 CONFIG_FILE="../config"
+MAX_RETRIES=5
 
 function get_args() {
     for arg in "$@"; do
@@ -39,15 +40,8 @@ function get_args() {
 }
 
 function init_source() {
-    if [ ! -d "$bcachefs_dir" ]; then
-        git clone $KERNEL_SOURCE "$bcachefs_dir" -b $KERNEL_VERSION
-    fi
-    cd "$bcachefs_dir" || exit 1
-    git reset --hard
-    git pull origin $KERNEL_VERSION
-    #make distclean
-    cp ../config ./.config
-    cd ..
+    try_init_kernel_source
+    cd $CURDIR
     if [ ! -d "$bcachefs_tools" ]; then
         git clone https://evilpiepirate.org/git/bcachefs-tools.git "$bcachefs_tools" -b $TOOLS_VERSION
     fi
@@ -56,6 +50,36 @@ function init_source() {
     git pull origin $TOOLS_VERSION
     #make clean
     cd ..
+}
+
+function init_kernel_source() {
+    cd $CURDIR
+    if [ ! -d "$bcachefs_dir" ]; then
+        git clone $KERNEL_SOURCE "$bcachefs_dir" -b $KERNEL_VERSION
+    fi
+    cd "$bcachefs_dir" || exit 1
+    git reset --hard
+    git pull origin $KERNEL_VERSION
+}
+
+function try_init_kernel_source()
+{
+    COUNT=0
+    while [ $COUNT -lt $MAX_RETRIES ]; do
+        if  init_kernel_source; then
+            echo "git pull 成功 ✔️"
+            exit 0
+        else
+            echo "git pull 失败 ❌"
+            COUNT=$((COUNT+1))
+            if [ $COUNT -lt $MAX_RETRIES ]; then
+                echo "等待 5 秒后重试..."
+                sleep 5
+            fi
+        fi
+    done
+    cp ../config ./.config
+    #make distclean
 }
 
 function build_kernel() {
@@ -102,16 +126,19 @@ function copy_deb() {
     img=$(awk '{print $1}' $bcachefs_dir/debian/image.files)
     header=$(awk '{print $1}' $bcachefs_dir/debian/headers.files)
     libc=$(awk '{print $1}' $bcachefs_dir/debian/libc-dev.files)
+    bcachefs_ver=$(grep '^VERSION=' $bcachefs_tools/Makefile | cut -d= -f2)
     rm -rf ../config/packages.chroot/*.deb
     cp -rf $img ../config/packages.chroot/
     cp -rf $header ../config/packages.chroot/
     cp -rf $libc ../config/packages.chroot/
     cp -rf bcachefs-tools_*_amd64.deb ../config/packages.chroot/
-    cp -rf tools/liburcu-dev_0.15.0_amd64.deb ../config/packages.chroot/
-    cp -rf tools/liburcu8_0.15.0_amd64.deb ../config/packages.chroot/
 }
 
-shift
+function clean_deb() {
+    rm -rf *.deb *.build *.buildinfo *.changes *.tar.gz *.dsc
+}
+
 get_args $@
 
+shift
 $cmd

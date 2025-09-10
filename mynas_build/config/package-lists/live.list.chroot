@@ -50,4 +50,5 @@ iotop
 xfsprogs
 lm-sensors
 thin-provisioning-tools
+fio
 #libaio1t64

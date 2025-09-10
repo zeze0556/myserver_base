@@ -29,7 +29,7 @@ function check_ver() {
                 echo "✅ 新版本发布：$old --> $VER" >> $CURDIR/../watch.log
                 # 获取对应的 changelog URL
                 CHANGELOG=$(echo "$one" | xmllint --xpath '//table//tr[6]/td[1]/a/@href' - 2>/dev/null | sed -E 's/href="([^"]*)"/\1\n/g')
-                $HOOK $VER > $CURDIR/../build_kernel.log
+                compile_kernel $VER > $CURDIR/../build_kernel.log
                 if [ $? -eq 0 ]; then
                     echo "$VER" > $CURDIR/../.kernel_version
                     build_iso
