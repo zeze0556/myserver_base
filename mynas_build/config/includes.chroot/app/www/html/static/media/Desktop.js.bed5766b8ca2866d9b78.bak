@@ -1,0 +1,147 @@
+import React, { useState, useEffect, useRef, useContext, forwardRef, useImperativeHandle, Fragment } from 'react';
+import { styled } from '@mui/system';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {
+    Table, Pagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, TableContainer,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    Paper,
+    Container,
+    TablePagination,
+    Modal,
+    AppBar,
+    Drawer,
+    Box,
+    IconButton,
+    Fab,
+} from '@mui/material';
+
+import MenuIcon from '@mui/icons-material/Menu';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import { DataContext } from "../store/global_data.js";
+import { Resizable } from 'react-resizable';
+import ChatBubbleOutlineSharpIcon from '@mui/icons-material/ChatBubbleOutlineSharp';
+import TaskBar from "./TaskBar.js";
+import "./desktop.css";
+
+
+const defaultTheme = createTheme();
+
+const StyledFab = styled(Fab)({
+    //position: 'absolute',
+    //zIndex: 1,
+    //top: -30,
+    //left: 0,
+    //right: 0,
+    margin: '0 auto',
+});
+
+const MessagePanel = forwardRef((props, ref)=> {
+    const [state, setState] = useState(false);
+    let toggle = (v)=> {
+        if(typeof v=== 'boolean') {
+            setState(v);
+        } else {
+            setState(!state);
+        }
+    };
+    useImperativeHandle(ref, () => ({
+        toggle,
+    }));
+
+    let onClick = (e)=> {
+        console.log("click=====", e);
+        e.preventDefault();
+        toggle(false);
+    };
+
+    return (<Drawer
+        anchor="right"
+        open={state}
+    >
+        <Box
+            sx={{ width: 250 }}
+            role="presentation"
+            onClick={onClick}
+    >
+        <div>aaaaaa</div>
+        </Box>
+    </Drawer>
+    );
+});
+
+export default function Desktop() {
+    const global_data = React.useContext(DataContext);
+    const [state, setState] = useState({
+        sidebar_status: false,
+        right: false,
+            width: 200,
+            height: 200,
+            absoluteWidth: 200,
+            absoluteHeight: 200,
+            absoluteLeft: 0,
+            absoluteTop: 0,
+    });
+
+    const task_bar = useRef(null);
+    const message_ref = useRef(null);
+
+    let set_sidebarstatus = (e) => {
+        e.preventDefault();
+        message_ref.current.toggle();
+    };
+
+    let handleClose=(a)=> {
+        console.log("a===", a);
+    };
+    let close_sidebar = (e)=> {
+        e.preventDefault();
+        console.log("close_sidebar===");
+        message_ref.current.toggle(false);
+    };
+
+    let onResize = (event, { element, size, handle })=> {
+        console.log("onResize==", size);
+        setState({ width: size.width, height: size.height });
+    };
+
+    return (<ThemeProvider theme={defaultTheme}>
+        <div className="desktop">
+          <div className="window-area" >
+                <Resizable
+                    className="box"
+                    width={state.width}
+                    height={state.height}
+                    onResize={onResize}
+                    resizeHandles={['sw', 'se', 'nw', 'ne', 'w', 'e', 'n', 's']}
+      >
+                  <div style={{width: state.width+"px",
+                            height: state.height+"px"}}>
+                    bbbb
+                  </div>
+            </Resizable>
+            </div>
+          <MessagePanel ref={message_ref}/>
+            <div className="task-bar">
+                <AppBar sx={{ bottom: 0, top: "auto" }}>
+                    <TaskBar ref={task_bar}>
+                      <apprunlist>
+                        <AddIcon />
+                        <AddIcon />
+                      </apprunlist>
+                  <messagelist>
+                    <IconButton color="inherit" onClick={set_sidebarstatus}>
+                                <ChatBubbleOutlineSharpIcon fontSize="large"/>
+                            </IconButton>
+                  </messagelist>
+                    </TaskBar>
+                </AppBar>
+            </div>
+
+        </div>
+    </ThemeProvider>);
+}

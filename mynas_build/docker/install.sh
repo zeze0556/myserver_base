@@ -14,6 +14,8 @@ function install() {
     apt-get install -y --fix-missing pkg-config libaio-dev libblkid-dev libkeyutils-dev bc cpio zstd grub2 initramfs-tools clang librust-clang-sys-dev\
             liblz4-dev libsodium-dev libzstd-dev vim file wget unzip rsync \
             uuid-dev zlib1g-dev valgrind libudev-dev git build-essential rust-all \
+            libclang-dev \
+            python3-docutils \
             debhelper \
             devscripts \
             python3 \
@@ -25,12 +27,14 @@ function install() {
             live-build \
             libdw-dev  libunwind-dev  libslang2-dev libperl-dev systemtap-sdt-dev \
             python3-dev libpfm4-dev libtraceevent-dev liburcu-dev \
+            jq dh-dkms
 
             echo "over install"
 }
 
 function install_rustup() {
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+    #curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -y
 }
 
 function clean() {

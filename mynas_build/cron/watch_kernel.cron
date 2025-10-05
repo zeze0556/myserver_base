@@ -1,1 +1,1 @@
-0 2 * * * /data/tools/watch_kernel.sh 6.16 compile_kernel &
+0 2 * * * /data/tools/watch_kernel.sh 6.17 compile_kernel &

@@ -1,0 +1,130 @@
+import React, {useState, useEffect, useRef, useContext, forwardRef, useImperativeHandle, Fragment } from 'react';
+import { styled } from '@mui/system';
+
+import { Table, Pagination, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, TableContainer,
+         TableHead,
+         TableRow,
+         TableCell,
+         TableBody,
+         Paper,
+         Container,
+         TablePagination,
+         Toolbar,
+         Stack,
+         Modal,
+         Fab,
+         IconButton,
+       } from '@mui/material';
+
+import WindowSharpIcon from '@mui/icons-material/WindowSharp';
+import SearchIcon from '@mui/icons-material/Search';
+
+const StyledFab = styled(Fab)({
+    //position: 'absolute',
+    //zIndex: 1,
+    //top: 0,
+    //left: 0,
+    //right: 0,
+    //width: '100vh',
+    margin: '0 auto',
+});
+
+const MessageZone= styled(Stack)({
+    right:0,
+    position: 'fixed',
+    margin: '0, auto'
+});
+
+const AppIconZone = styled(Stack)({
+    left:0,
+    right:0,
+    //position: 'absolute',
+    margin: '0, auto'
+
+});
+
+const AllZone = styled(Stack)({
+    left:0,
+    right:0,
+    position: 'relative',
+    margin: '0, auto'
+
+});
+
+const RenderMessage = forwardRef((props, ref)=> {
+    let init_data = [];
+    let c = props.children[0].props;
+    if(!c.children.length) {
+        let v = c.children;
+        init_data = [<Fragment key={v.key||init_data.length+1}>{v}</Fragment>];
+    } else {
+        init_data = c.children.map((v, index)=> {
+            return <Fragment key={v.key||index}>{v}</Fragment>;
+        });
+    }
+    const [message, setMessage] = useState(init_data);
+    return (<MessageZone>
+          {message}
+        </MessageZone>);
+});
+
+const RenderAppRun=forwardRef((props, ref)=> {
+    let init_data = [];
+    let c = props.children[0].props;
+    console.log("apprunlist==", c);
+    if(!c.children.length) {
+        let v = c.children;
+        init_data = [<StyledFab key={v.key||init_data.length+1}>{v}</StyledFab>];
+    } else {
+        init_data = c.children.map((v, index)=> {
+            return <StyledFab key={v.key||index}>{v}</StyledFab>;
+        });
+    }
+    const [apprun, setAppRun] = useState(init_data);
+    let add = (v)=> {
+        let new_data = [...apprun, <StyledFab key={v.key||apprun.length+1}>{v}</StyledFab>];
+        setAppRun(new_data);
+    };
+    let remove = (v)=> {
+    };
+    useImperativeHandle(ref, ()=> ({
+        add,
+        remove,
+    }));
+
+    return (<AppIconZone direction="row">
+             {apprun}
+            </AppIconZone>);
+});
+
+const TaskBar = forwardRef((props, ref) => {
+    const run_ref = useRef(null);
+    const message_ref = useRef(null);
+    let add_runapp = (v)=> {
+        run_ref.current.add(v);
+    };
+    let remove_runapp = (v)=> {
+        run_ref.remove.add(v);
+    };
+    useImperativeHandle(ref, ()=> ({
+        add_runapp,
+        remove_runapp,
+    }));
+    let test = ()=> {
+        add_runapp(<SearchIcon/>);
+    };
+    return (<Toolbar>
+              <AllZone direction="row">
+                <IconButton color="inherit" onClick={test}>
+                  <WindowSharpIcon fontSize="large"/>
+                </IconButton>
+                <RenderAppRun ref={run_ref}>
+                    {props.children.filter(v=>v.type =='apprunlist')}
+            </RenderAppRun>
+                <RenderMessage ref={message_ref}>
+                  {props.children.filter(v=>v.type =='messagelist')}
+            </RenderMessage>
+              </AllZone>
+            </Toolbar>);
+});
+export default TaskBar;

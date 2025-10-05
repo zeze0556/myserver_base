@@ -51,4 +51,6 @@ xfsprogs
 lm-sensors
 thin-provisioning-tools
 fio
+e2fsprogs
+dkms
 #libaio1t64

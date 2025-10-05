@@ -22,3 +22,8 @@ services:
     - /tmp/.X11-unix:/tmp/.X11-unix
     - ./root:/root:z
     - ../../mynas_build:/data:z
+    deploy:
+      resources:
+        limits:
+          #cpus: '1.5'
+          memory: 12G

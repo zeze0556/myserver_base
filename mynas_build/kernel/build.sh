@@ -6,12 +6,14 @@ bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
 KERNEL_VERSION="v6.16"
-TOOLS_VERSION="v1.25.3"
+TOOLS_VERSION="v1.31.7"
 LOCALVERSION="-rix"
+#LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
 KERNEL_SOURCE="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
 CONFIG_FILE="../config"
 MAX_RETRIES=5
+. "/root/.cargo/env"
 
 function get_args() {
     for arg in "$@"; do
@@ -95,9 +97,12 @@ function build_kernel() {
 function build_tools() {
     cd $CURDIR
     cd $bcachefs_tools
-    . "/root/.cargo/env"
-    make
-    debuild -us -uc -nc -b -i -I -d
+    #. "/root/.cargo/env"
+    rm -rf *
+    git reset --hard
+    rm -rf .cargo
+    make deb
+    #debuild -us -uc -nc -b -i -I -d
 }
 
 function build() {
@@ -112,7 +117,9 @@ function clean_kernel() {
 
 function clean_tools() {
     cd $CURDIR
-    cd "$bcachefs_tools" && make clean
+    cd "$bcachefs_tools"
+    rm -rf .cargo
+    make clean
 }
 
 function clean() {
@@ -127,11 +134,14 @@ function copy_deb() {
     header=$(awk '{print $1}' $bcachefs_dir/debian/headers.files)
     libc=$(awk '{print $1}' $bcachefs_dir/debian/libc-dev.files)
     bcachefs_ver=$(grep '^VERSION=' $bcachefs_tools/Makefile | cut -d= -f2)
-    rm -rf ../config/packages.chroot/*.deb
+    rm -rf ../config/packages.chroot/*.deb ../config/includes.chroot/usr/src
     cp -rf $img ../config/packages.chroot/
     cp -rf $header ../config/packages.chroot/
     cp -rf $libc ../config/packages.chroot/
     cp -rf bcachefs-tools_*_amd64.deb ../config/packages.chroot/
+    mkdir -p ../config/includes.chroot/usr/src
+    cp -rf bcachefs-tools/debian/bcachefs-kernel-dkms/usr/src ../config/includes.chroot/usr/
+    #bcachefs-kernel-dkms_*_amd64.deb 
 }
 
 function clean_deb() {
