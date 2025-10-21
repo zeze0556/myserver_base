@@ -6,13 +6,14 @@ bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
 KERNEL_VERSION="v6.16"
-TOOLS_VERSION="v1.31.7"
+TOOLS_VERSION="v1.31.11"
 LOCALVERSION="-rix"
 #LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
 KERNEL_SOURCE="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"
 CONFIG_FILE="../config"
 MAX_RETRIES=5
+export DEB_BUILD_OPTIONS=noautodbgsym
 . "/root/.cargo/env"
 
 function get_args() {
@@ -43,11 +44,13 @@ function get_args() {
 
 function init_source() {
     try_init_kernel_source
+    echo "last=$?"
     cd $CURDIR
     if [ ! -d "$bcachefs_tools" ]; then
         git clone https://evilpiepirate.org/git/bcachefs-tools.git "$bcachefs_tools" -b $TOOLS_VERSION
     fi
     cd "$bcachefs_tools" || exit 1
+    rm -rf *
     git reset --hard
     git pull origin $TOOLS_VERSION
     #make clean
@@ -59,7 +62,8 @@ function init_kernel_source() {
     if [ ! -d "$bcachefs_dir" ]; then
         git clone $KERNEL_SOURCE "$bcachefs_dir" -b $KERNEL_VERSION
     fi
-    cd "$bcachefs_dir" || exit 1
+    cd "$bcachefs_dir" || return 1
+    rm -rf *
     git reset --hard
     git pull origin $KERNEL_VERSION
 }
@@ -70,7 +74,7 @@ function try_init_kernel_source()
     while [ $COUNT -lt $MAX_RETRIES ]; do
         if  init_kernel_source; then
             echo "git pull 成功 ✔️"
-            exit 0
+            break
         else
             echo "git pull 失败 ❌"
             COUNT=$((COUNT+1))
@@ -87,6 +91,8 @@ function try_init_kernel_source()
 function build_kernel() {
     cd $CURDIR
     cd $bcachefs_dir
+    rm -rf *
+    git reset --hard
     cp ../config ./.config
     yes "" | make oldconfig
     cp -rf .config ../config_$KERNEL_VERSION
@@ -100,8 +106,9 @@ function build_tools() {
     #. "/root/.cargo/env"
     rm -rf *
     git reset --hard
-    rm -rf .cargo
-    make deb
+    #rm -rf .cargo
+    /usr/share/cargo/bin/cargo vendor
+    make CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu deb
     #debuild -us -uc -nc -b -i -I -d
 }
 

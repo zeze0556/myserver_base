@@ -1,21 +1,24 @@
 #!/bin/bash
-#set -ex
+set -x
 echo "bcachefs dkms====="
 
 function install() {
-    apt list | grep headers
-    apt install -y build-essential
+    #apt list | grep headers
+    apt install -y build-essential --no-install-recommends --no-install-suggests
     cd /usr/src
-    . /usr/src/bcachefs-/dkms.conf
+    . /usr/src/bcachefs-*/dkms.conf
     VER=$PACKAGE_VERSION
     KERNEL=/boot/vmlinuz-*
     KER_VER=$(basename ${KERNEL} | sed -e 's|vmlinuz-||')
-    rm -rf bcachefs-$VER && ln -s bcachefs- bcachefs-$VER
+    #rm -rf bcachefs-$VER && ln -s bcachefs- bcachefs-$VER
     uname -a
     dkms build -m bcachefs -v $VER -k $KER_VER --debug
     dkms install --force -m bcachefs -v $VER -k $KER_VER --debug
-    apt remove -y build-essential
-    apt autoremove -y
+    #apt remove -y build-essential
+    apt purge -y --auto-remove build-essential
+    apt purge -y --auto-remove gcc g++ make dpkg-dev
+    apt clean -y
+    apt autoremove -y --purge
     rm -rf /usr/src/bcachefs*
 }
 

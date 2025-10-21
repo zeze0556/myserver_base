@@ -1,6 +1,7 @@
 #!/bin/bash
 # 设置你要监控的 kernel 版本（例如：6.5-rc4）
 #set -x
+#exit 0
 WATCH_VERSION=${1:-"6.15"}
 HOOK=${2:-"compile_kernel"}
 CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -32,7 +33,7 @@ function check_ver() {
                 compile_kernel $VER > $CURDIR/../build_kernel.log
                 if [ $? -eq 0 ]; then
                     echo "$VER" > $CURDIR/../.kernel_version
-                    build_iso
+                    build_iso $VER > $CURDIR/../build_iso.log
                 else
                     echo "last=="$?
                 fi
@@ -51,12 +52,12 @@ function compile_kernel() {
     cd $CURDIR/../kernel
     #echo "skip"
     ./build.sh init_source --kernel_version=v$1 && ./build.sh clean && ./build.sh build --kernel_version=v$1 && ./build.sh copy_deb
-
 }
 
 function build_iso() {
     cd $CURDIR/../
-    make >> $(cat $CURDIR/../.kernel_version)_build_iso.log
+    echo $PATH
+    make >> $1_build_iso.log
 }
 
 check_ver

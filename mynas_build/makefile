@@ -18,11 +18,12 @@ clean:
 	lb clean
 
 build:
-	@echo "--linux-flavour rix"
+	@echo "--linux-flavour rix $PATH"
+	@pwd
 	lb clean
 	lb config --linux-packages linux-image-$(KERNEL_VER) --linux-flavour "rix" \
        --distribution $(CODENAME) \
-       --apt-options "--yes"\
+       --apt-options "--yes --no-install-recommends --no-install-suggests"\
        --distribution-chroot $(CODENAME) \
        --distribution-binary $(CODENAME) \
 			 --parent-distribution $(CODENAME) \
