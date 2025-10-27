@@ -6,7 +6,7 @@ bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
 KERNEL_VERSION="v6.16"
-TOOLS_VERSION="v1.31.11"
+TOOLS_VERSION="v1.31.12"
 LOCALVERSION="-rix"
 #LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
