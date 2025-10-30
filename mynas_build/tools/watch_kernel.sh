@@ -56,8 +56,7 @@ function compile_kernel() {
 
 function build_iso() {
     cd $CURDIR/../
-    echo $PATH
-    make >> $1_build_iso.log
+    PATH=$PATH:/usr/sbin make >> $1_build_iso.log
 }
 
 check_ver
