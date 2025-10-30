@@ -3,12 +3,22 @@ myserver系统构建
 
 基于debian的live-build构建分发的live iso
 
+截图
+
+![screenshot](./mynas_build/screenshot/20251030.png)
+
+
+
 内核及工具构建:
 ```bash
 cd mynas_build/kernel
 ./build.sh init_source #获取源代码
 ./build.sh copy_deb #构建deb并复制
 ```
+
+docker-compose 中添加变量CRON=true， 则主动检查是否有新的linux内核发布。有的话自动构建最新版本
+
+
 
 iso构建:
 ```bash

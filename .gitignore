@@ -3,3 +3,4 @@ mynas_build/config/binary
 mynas_build/config/chroot
 mynas_build/config/packages.choot/
 mynas_build/kernel/tools/
+*.log
