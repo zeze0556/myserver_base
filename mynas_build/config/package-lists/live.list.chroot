@@ -1,6 +1,7 @@
 user-setup
 sudo
 rsyslog
+attr
 cron
 ifupdown
 isc-dhcp-client
