@@ -27,7 +27,7 @@ function install() {
             live-build \
             libdw-dev  libunwind-dev  libslang2-dev libperl-dev systemtap-sdt-dev \
             python3-dev libpfm4-dev libtraceevent-dev liburcu-dev \
-            jq dh-dkms
+            jq dh-dkms dh-cargo
 
             echo "over install"
 }

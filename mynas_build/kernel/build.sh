@@ -6,7 +6,7 @@ bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
 KERNEL_VERSION="v6.16"
-TOOLS_VERSION="v1.33.1"
+TOOLS_VERSION="v1.33.2"
 LOCALVERSION="-rix"
 #LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
@@ -98,6 +98,7 @@ function build_kernel() {
     cp -rf .config ../config_$KERNEL_VERSION
     #fakeroot debian/rules binary
     make -j 4 deb-pkg LOCALVERSION=$LOCALVERSION
+    cd tools/perf && make && cp -rf perf $CURDIR/
 }
 
 function build_tools() {
@@ -145,6 +146,7 @@ function copy_deb() {
     cp -rf $img ../config/packages.chroot/
     cp -rf $header ../config/packages.chroot/
     cp -rf $libc ../config/packages.chroot/
+    cp -rf perf  ../config/includes.chroot/sbin/
     cp -rf bcachefs-tools_*_amd64.deb ../config/packages.chroot/
     mkdir -p ../config/includes.chroot/usr/src
     cp -rf bcachefs-tools/debian/bcachefs-kernel-dkms/usr/src ../config/includes.chroot/usr/
@@ -152,7 +154,7 @@ function copy_deb() {
 }
 
 function clean_deb() {
-    rm -rf *.deb *.build *.buildinfo *.changes *.tar.gz *.dsc
+    rm -rf *.deb *.build *.buildinfo *.changes *.tar.gz *.dsc perf
 }
 
 get_args $@
