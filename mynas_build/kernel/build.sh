@@ -5,8 +5,8 @@ CURDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
-KERNEL_VERSION="v6.16"
-TOOLS_VERSION="v1.33.2"
+KERNEL_VERSION="v6.18"
+TOOLS_VERSION="v1.36.1"
 LOCALVERSION="-rix"
 #LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
@@ -44,7 +44,11 @@ function get_args() {
 
 function init_source() {
     try_init_kernel_source
+    init_bcachefs_tools_source
     echo "last=$?"
+}
+
+function init_bcachefs_tools_source() {
     cd $CURDIR
     if [ ! -d "$bcachefs_tools" ]; then
         git clone https://evilpiepirate.org/git/bcachefs-tools.git "$bcachefs_tools" -b $TOOLS_VERSION
@@ -53,7 +57,6 @@ function init_source() {
     rm -rf *
     git reset --hard
     git pull origin $TOOLS_VERSION
-    #make clean
     cd ..
 }
 

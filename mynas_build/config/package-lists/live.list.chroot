@@ -55,3 +55,6 @@ fio
 e2fsprogs
 dkms
 #libaio1t64
+libvirglrenderer1
+qemu-system-modules-opengl
+qemu-system-modules-spice
