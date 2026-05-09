@@ -6,7 +6,8 @@ bcachefs_dir="./bcachefs"
 bcachefs_tools="./bcachefs-tools"
 
 KERNEL_VERSION="v6.18"
-TOOLS_VERSION="v1.36.1"
+TOOLS_VERSION="master"
+#"v1.36.1"
 LOCALVERSION="-rix"
 #LOCALVERSION="-generic"
 #KERNEL_SOURCE="https://evilpiepirate.org/git/bcachefs.git"
@@ -97,11 +98,12 @@ function build_kernel() {
     rm -rf *
     git reset --hard
     cp ../config ./.config
-    yes "" | make oldconfig
+    make LLVM=1 rustavailable
+    yes "" | make LLVM=1 oldconfig
     cp -rf .config ../config_$KERNEL_VERSION
     #fakeroot debian/rules binary
-    make -j 4 deb-pkg LOCALVERSION=$LOCALVERSION
-    cd tools/perf && make && cp -rf perf $CURDIR/
+    make -j 4 deb-pkg LOCALVERSION=$LOCALVERSION LLVM=1
+    cd tools/perf && make LLVM=1 && cp -rf perf $CURDIR/
 }
 
 function build_tools() {
@@ -111,8 +113,17 @@ function build_tools() {
     rm -rf *
     git reset --hard
     #rm -rf .cargo
+    #git apply ../fix_completions.patch
     /usr/share/cargo/bin/cargo vendor
+    cat > debian/not-installed << EOF
+usr/sbin/fsck.fuse.bcachefs
+usr/sbin/mkfs.fuse.bcachefs
+usr/sbin/mount.fuse.bcachefs
+usr/share/bash-completion/completions/bcachefs
+usr/lib/systemd/system/bcachefs-wait-devices@.service
+EOF
     make CARGO_BUILD_TARGET=x86_64-unknown-linux-gnu deb
+    #deb
     #debuild -us -uc -nc -b -i -I -d
 }
 

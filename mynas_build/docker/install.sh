@@ -27,7 +27,7 @@ function install() {
             live-build \
             libdw-dev  libunwind-dev  libslang2-dev libperl-dev systemtap-sdt-dev \
             python3-dev libpfm4-dev libtraceevent-dev liburcu-dev \
-            jq dh-dkms dh-cargo
+            jq dh-dkms dh-cargo lld rustc rust-src bindgen rustfmt rust-clippy \
 
             echo "over install"
 }

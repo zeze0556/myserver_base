@@ -18,7 +18,7 @@ clean:
 	lb clean
 
 build:
-	@echo "--linux-flavour rix $PATH"
+	@echo "--linux-flavour rix $$PATH"
 	@pwd
 	lb clean
 	lb config --linux-packages linux-image-$(KERNEL_VER) --linux-flavour "rix" \

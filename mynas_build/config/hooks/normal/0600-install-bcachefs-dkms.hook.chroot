@@ -4,7 +4,7 @@ echo "bcachefs dkms====="
 
 function install() {
     #apt list | grep headers
-    apt install -y build-essential --no-install-recommends --no-install-suggests
+    apt install -y build-essential --no-install-recommends --no-install-suggests clang lld rustc rust-src bindgen rustfmt rust-clippy librust-clang-sys-dev
     cd /usr/src
     . /usr/src/bcachefs-*/dkms.conf
     VER=$PACKAGE_VERSION
@@ -16,7 +16,7 @@ function install() {
     dkms install --force -m bcachefs -v $VER -k $KER_VER --debug
     #apt remove -y build-essential
     apt purge -y --auto-remove build-essential
-    apt purge -y --auto-remove gcc g++ make dpkg-dev
+    apt purge -y --auto-remove gcc g++ make dpkg-dev clang lld rustc rust-src bindgen rustfmt rust-clippy librust-clang-sys-dev
     apt clean -y
     apt autoremove -y --purge
     rm -rf /usr/src/bcachefs*
