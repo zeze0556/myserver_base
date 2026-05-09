@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -x
+
+max_retries=5
+retry_count=0
+
+with_retry() {
+    curl https://rclone.org/install.sh | bash
+    return $?
+}
+
+while [ $retry_count -lt $max_retries ]; do
+    # 使用 curl 进行请求
+    with_retry
+    # 检查 curl 的返回码
+    if [ $? -eq 0 ]; then
+        echo "Request successful"
+        break  # 请求成功，退出循环
+    else
+        echo "Request failed. Retrying..."
+        retry_count=$((retry_count + 1))
+        sleep 5  # 间隔5秒后重试
+    fi
+done
+
